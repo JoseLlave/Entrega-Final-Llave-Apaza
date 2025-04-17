@@ -1,0 +1,317 @@
+/* ESTILOS DE HEADER Y FOOTER SON ESTILOS PLANTILLA DEL PROYECTO DE DESARROLLO WEB */
+@charset "UTF-8";
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilos generales */
+body {
+  background-color: black;
+}
+
+/* Estilos del Header */
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Imagen del logo */
+.navbar-brand img {
+  width: 20vw;
+  max-width: 200px;
+  min-width: 80px;
+  height: auto;
+}
+
+.custom-offcanvas {
+  background-color: rgba(39, 38, 38, 0.83);
+}
+
+.custom-offcanvas-title {
+  color: rgba(214, 161, 82, 0.81);
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+/* Estilos de los enlaces */
+.custom-nav-link {
+  color: #94959b;
+  font-weight: bold;
+  position: relative;
+  color: #94959b;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+.custom-nav-link:hover {
+  color: #d6a152;
+}
+.custom-nav-link::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #d6a152;
+  visibility: hidden;
+  transition: width 0.1s ease-in-out;
+}
+.custom-nav-link:hover::before {
+  width: 100%;
+  visibility: visible;
+}
+
+.custom-navbar-toggler {
+  border: none;
+  font-size: 1.25rem;
+}
+.custom-navbar-toggler:focus, .custom-navbar-toggler .btn-close:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+/* Estilos de main para todas las páginas */
+main {
+  text-align: center;
+  color: whitesmoke;
+}
+
+/* Estilos de la página index */
+.main-index {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 10px;
+  padding: 20px;
+  max-width: 100vw;
+  margin: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  margin-top: 80px;
+}
+
+/* Estilo de la seccion conciertos */
+.main-conciertos {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  padding: 100px 20px 20px;
+}
+
+/* Lista de conciertos */
+.lista-conciertos {
+  grid-column: 1;
+  background: rgba(30, 30, 30, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.lista-conciertos input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #d6a152;
+  color: white;
+}
+
+.lista-conciertos li {
+  display: flex;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(214, 161, 82, 0.3);
+}
+
+.lista-conciertos img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 5px;
+}
+
+.opciones-compra {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.select-tipo {
+  background: #333;
+  color: white;
+  padding: 8px;
+}
+
+.input-cantidad {
+  padding: 8px;
+  width: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #d6a152;
+  color: white;
+  text-align: center;
+}
+
+.btn-comprar {
+  padding: 8px 15px;
+  background: #d6a152;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Carrito de compras */
+.carrito-compras {
+  grid-column: 2;
+  background: rgba(30, 30, 30, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(214, 161, 82, 0.3);
+}
+
+.carrito-compras li {
+  display: flex;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(214, 161, 82, 0.2);
+}
+
+.carrito-compras img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.btn-eliminar {
+  background: none;
+  border: none;
+  color: #ff5252;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.btn-pagar {
+  width: 100%;
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.mensaje-interaccion {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  text-align: center;
+  display: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Entradas */
+.mis-entradas {
+  grid-column: 1/3;
+  background: rgba(30, 30, 30, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border: 1px solid rgba(214, 161, 82, 0.3);
+}
+
+#entradas-compradas-container {
+  list-style: none;
+  padding: 0;
+}
+
+.entrada-comprada {
+  display: flex;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: rgba(50, 50, 50, 0.5);
+  border-radius: 8px;
+}
+
+.entrada-comprada img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 15px;
+  border-radius: 5px;
+}
+
+.entrada-comprada .info-entrada {
+  flex: 1;
+}
+
+.entrada-comprada h3 {
+  color: white;
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+}
+
+.entrada-comprada h4 {
+  color: white;
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.entrada-comprada p {
+  margin: 5px 0;
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.sin-entradas {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+}
+
+
+/* Footer */
+footer {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+  footer p {
+    margin: 5px 0;
+    font-size: 1rem;
+  }
+  footer p:nth-child(4) {
+    font-weight: bold;
+  }
+  footer::before {
+    content: "";
+    display: block;
+    width: 80%;
+    height: 2px;
+    background-color: white;
+    margin-bottom: 10px;
+  }
