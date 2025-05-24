@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "artista": "Foster the People",
+    "tour": "The Play Tour",
+    "lugar": "Estadio Nacional, Lima",
+    "fecha": "15 Noviembre 2025",
+    "imagen": "./assets/pumped-Of-Kicks.jpg",
+    "precios": [175, 120, 85],
+    "disponibilidad": 50
+  },
+  {
+    "id": 2,
+    "artista": "Oasis",
+    "tour": "Luxury Disease Tour",
+    "lugar": "Arena Perú, Lima",
+    "fecha": "22 Diciembre 2025",
+    "imagen": "./assets/cancion-Oasis.jpg",
+    "precios": [150, 110, 80],
+    "disponibilidad": 50
+  },
+  {
+    "id": 3,
+    "artista": "Don Omar",
+    "tour": "Global Tour",
+    "lugar": "Teatro Municipal, Lima",
+    "fecha": "10 Enero 2025",
+    "imagen": "./assets/danza-Kuduro.jpg",
+    "precios": [130, 100, 70],
+    "disponibilidad": 50
+  },
+  {
+    "id": 4,
+    "artista": "30 Seconds to Mars",
+    "tour": "Panorama Tour",
+    "lugar": "Jockey Club, Lima",
+    "fecha": "5 Febrero 2025",
+    "imagen": "./assets/bright-Lights.jpg",
+    "precios": [120, 90, 60],
+    "disponibilidad": 50
+  },
+  {
+    "id": 5,
+    "artista": "Calvin Harris",
+    "tour": "Tribute Tour",
+    "lugar": "Parque de la Exposición, Lima",
+    "fecha": "15 Marzo 2025",
+    "imagen": "./assets/summer.jpg",
+    "precios": [180, 140, 100],
+    "disponibilidad": 50
+  }
+]
