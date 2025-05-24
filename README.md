@@ -10,9 +10,9 @@
 - Visualiza todos los eventos disponibles.
 
 ### Búsqueda
-- Filtra conciertos por artista o nombre de tour.
+- Se es posible buscar conciertos ingresando el nombre del concierto o del artista
 
-### 🛒 Carrito de Compras
+### Carrito de Compras
 - Agrega entradas seleccionando tipo y cantidad.
 - Elimina entradas del carrito.
 - Calcula el total automáticamente.
@@ -23,4 +23,6 @@
 
 ### Historial de Órdenes
 - Consulta tus compras anteriores desde tu cuenta.
+
+### En conclusión se simula el flujo completo de un Ecommerce de un simulador de ventas de entradas para conciertos
 
