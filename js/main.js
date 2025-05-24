@@ -1,312 +1,255 @@
-const conciertos = [
-    {
-      id: 1,
-      artista: "Oasis",
-      tour: "The Play Tour",
-      lugar: "Estadio Nacional, Lima",
-      fecha: "15 Noviembre 2024",
-      imagen: "https://i.ibb.co/3Y8MjWSg/cancion-Oasis.jpg",
-      precios: [175, 120, 85],
-      disponibilidad: 1200
-    },
-    {
-      id: 2,
-      artista: "Foster the People",
-      tour: "Luxury Disease Tour",
-      lugar: "Arena Perú, Lima",
-      fecha: "22 Diciembre 2024",
-      imagen: "https://i.ibb.co/xKK8fnnD/pumped-Of-Kicks.jpg",
-      precios: [150, 110, 80],
-      disponibilidad: 850
-    },
-    {
-      id: 3,
-      artista: "Don Omar",
-      tour: "Global Tour",
-      lugar: "Teatro Municipal, Lima",
-      fecha: "10 Enero 2025",
-      imagen: "https://i.ibb.co/xqy1GpGq/danza-Kuduro.jpg",
-      precios: [130, 100, 70],
-      disponibilidad: 1500
-    },
-    {
-      id: 4,
-      artista: "30 Seconds to Mars",
-      tour: "Panorama Tour",
-      lugar: "Jockey Club, Lima",
-      fecha: "5 Febrero 2025",
-      imagen: "https://i.ibb.co/MyFVDBh5/bright-Lights.jpg",
-      precios: [120, 90, 60],
-      disponibilidad: 2000
-    },
-    {
-      id: 5,
-      artista: "Calvin Harris",
-      tour: "Tribute Tour",
-      lugar: "Parque de la Exposición, Lima",
-      fecha: "15 Marzo 2025",
-      imagen: "https://i.ibb.co/mFt3pfL2/summer.jpg",
-      precios: [180, 140, 100],
-      disponibilidad: 3000
+document.addEventListener('DOMContentLoaded', function() {
+    cargarDatosConciertos();
+    configurarEventosIniciales();
+    mostrarOrdenesCompradas();
+});
+
+let conciertosData = [];
+
+function cargarDatosConciertos() {
+    try {
+        fetch('db/data.json')
+            .then(response => {
+                if (!response.ok) {
+                    mostrarFeedback('No se pudieron cargar los conciertos');
+                    document.getElementById('lista-conciertos-container').innerHTML = 
+                        '<li class="sin-resultados">Error al cargar los conciertos. Por favor intenta más tarde.</li>';
+                    return;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    conciertosData = data;
+                    mostrarListaConciertos(data);
+                    configurarEventosConciertos();
+                }
+            })
+            .catch(() => {
+                mostrarFeedback('No se pudieron cargar los conciertos');
+                document.getElementById('lista-conciertos-container').innerHTML = 
+                    '<li class="sin-resultados">Error al cargar los conciertos. Por favor intenta más tarde.</li>';
+            });
+    } catch {
+        mostrarFeedback('Ocurrio un problema inesperado');
+        document.getElementById('lista-conciertos-container').innerHTML = 
+            '<li class="sin-resultados">Error inesperado. Por favor recarga la página.</li>';
     }
-  ];
-  
-  // Las variables globales
-  const impuesto = 0.1;
-  let carrito = [];
-  let total = 0;
-  let listaActual = [];
-  
-  for (let i = 0; i < conciertos.length; i++) {
-    listaActual.push(conciertos[i]);
-  }
-  
-  const listaConciertosContainer = document.getElementById('lista-conciertos-container');
-  const carritoContainer = document.getElementById('carrito-container');
-  const totalElemento = document.getElementById('total-carrito');
-  const btnPagar = document.getElementById('btn-pagar');
-  const inputBusqueda = document.getElementById('input-busqueda');
-  const entradasCompradasContainer = document.getElementById('entradas-compradas-container');
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    cargarCarrito();
-    mostrarConciertos(conciertos);
-    actualizarCarrito();
-    mostrarEntradasCompradas();
-  });
-  
-  // Funcion que es para mostrar los conciertos a manera de lista
-  function mostrarConciertos(lista) {
+}
+
+function mostrarListaConciertos(conciertos) {
+    const listaConciertosContainer = document.getElementById('lista-conciertos-container');
+    if (!listaConciertosContainer) return;
+    
     listaConciertosContainer.innerHTML = '';
     
-    if (lista.length === 0) {
-      listaConciertosContainer.innerHTML = '<li class="sin-resultados">No se encontraron conciertos</li>';
-      return;
+    if (conciertos.length === 0) {
+        listaConciertosContainer.innerHTML = '<li class="sin-resultados">No se encontraron conciertos</li>';
+        return;
     }
-  
-    lista.forEach(function(concierto) {
-      const item = document.createElement('li');
-      item.innerHTML = `
-        <img src="${concierto.imagen}" alt="Concierto ${concierto.artista}">
-        <div class="info-concierto">
-          <div class="datos-principales">
-            <h3>${concierto.artista} - ${concierto.tour}</h3>
-            <h4>${concierto.lugar}</h4>
-            <p class="fecha">${concierto.fecha}</p>
-          </div>
-          <div class="informacion-adicional">
-            <p class="precios">Precios: $${concierto.precios[0]} (Preferencial) | $${concierto.precios[1]} (Platea) | $${concierto.precios[2]} (General)</p>
-            <p class="disponibilidad">Entradas disponibles: ${concierto.disponibilidad}</p>
-          </div>
-          <div class="opciones-compra">
-            <select class="select-tipo" data-id="${concierto.id}">
-              <option value="0">Preferencial ($${concierto.precios[0]})</option>
-              <option value="1">Platea ($${concierto.precios[1]})</option>
-              <option value="2">General ($${concierto.precios[2]})</option>
-            </select>
-            <input type="number" class="input-cantidad" data-id="${concierto.id}" min="1" max="${concierto.disponibilidad}" value="1">
-            <button class="btn-comprar" data-id="${concierto.id}">Agregar al carrito</button>
-          </div>
-        </div>
-      `;
-      
-      listaConciertosContainer.appendChild(item);
-    });
-  
-    document.querySelectorAll('.btn-comprar').forEach(function(boton) {
-      boton.addEventListener('click', function(e) {
-        const id = parseInt(e.target.getAttribute('data-id'));
-        const conciertoSeleccionado = listaActual.find(function(c) { return c.id === id; });
-        
-        if (conciertoSeleccionado) {
-          const selectTipo = document.querySelector('.select-tipo[data-id="' + id + '"]');
-          const inputCantidad = document.querySelector('.input-cantidad[data-id="' + id + '"]');
-          
-          const tipoEntrada = parseInt(selectTipo.value);
-          const cantidad = parseInt(inputCantidad.value);
-          
-          if (cantidad > 0 && cantidad <= conciertoSeleccionado.disponibilidad) {
-            agregarAlCarrito(conciertoSeleccionado, tipoEntrada, cantidad);
-          } else {
-            mostrarMensaje('Cantidad no válida');
-          }
-        }
-      });
-    });
-  }
-  
-  // Funcion para agregar las entradas al carrito
-  function agregarAlCarrito(concierto, tipo, cantidad) {
-    const tipos = ['Preferencial', 'Platea', 'General'];
-    const precioBase = concierto.precios[tipo];
-    const precioTotal = (precioBase * cantidad) * (1 + impuesto);
-    
-    concierto.disponibilidad -= cantidad;
-    
-    const entrada = {
-      id: concierto.id + '-' + tipo,
-      conciertoId: concierto.id,
-      artista: concierto.artista,
-      tour: concierto.tour,
-      tipo: tipos[tipo],
-      cantidad: cantidad,
-      precioUnitario: precioBase,
-      precioTotal: precioTotal,
-      imagen: concierto.imagen
-    };
-    
-    const existeIndex = carrito.findIndex(function(item) { return item.id === entrada.id; });
-    
-    if (existeIndex !== -1) {
-      carrito[existeIndex].cantidad += cantidad;
-      carrito[existeIndex].precioTotal = (carrito[existeIndex].precioUnitario * carrito[existeIndex].cantidad) * (1 + impuesto);
-    } else {
-      carrito.push(entrada);
-    }
-    
-    mostrarMensaje(cantidad + ' entrada(s) ' + tipos[tipo] + ' para ' + concierto.artista + ' agregada(s) al carrito');
-    guardarCarrito();
-    actualizarCarrito();
-    mostrarConciertos(listaActual);
-  }
-  
-  // Funcion para actualizar el carrito
-  function actualizarCarrito() {
-    carritoContainer.innerHTML = '';
-    total = 0;
-    
-    if (carrito.length === 0) {
-      carritoContainer.innerHTML = '<li class="carrito-vacio">No hay entradas en el carrito</li>';
-    } else {
-      carrito.forEach(function(entrada) {
-        total += entrada.precioTotal;
-        
+
+    conciertos.forEach(concierto => {
         const item = document.createElement('li');
         item.innerHTML = `
-          <img src="${entrada.imagen}" alt="Entrada ${entrada.artista}">
-          <div class="info-entrada">
-            <h3>${entrada.cantidad} Entrada(s) ${entrada.tipo}</h3>
-            <h4>${entrada.artista} - ${entrada.tour}</h4>
-            <p class="precio-total">$${entrada.precioTotal.toFixed(2)}</p>
-            <button class="btn-eliminar" data-id="${entrada.id}">Eliminar</button>
-          </div>
+            <img src="${concierto.imagen}" alt="Concierto ${concierto.artista}" class="imagen-concierto">
+            <div class="info-concierto">
+                <div class="datos-principales">
+                    <h3>${concierto.artista} - ${concierto.tour}</h3>
+                    <h4>${concierto.lugar}</h4>
+                    <p class="fecha">📅 ${concierto.fecha}</p>
+                </div>
+                <div class="informacion-adicional">
+                    <p class="precios">💲 Precios: $${concierto.precios[0]} (Preferencial) | $${concierto.precios[1]} (Platea) | $${concierto.precios[2]} (General)</p>
+                    <p class="disponibilidad" data-id="${concierto.id}">🎟️ Entradas disponibles: ${concierto.disponibilidad}</p>
+                </div>
+                <div class="opciones-compra">
+                    <select class="select-tipo" data-id="${concierto.id}">
+                        <option value="0">Preferencial ($${concierto.precios[0]})</option>
+                        <option value="1">Platea ($${concierto.precios[1]})</option>
+                        <option value="2">General ($${concierto.precios[2]})</option>
+                    </select>
+                    <div class="controles-compra">
+                        <input type="number" class="input-cantidad" data-id="${concierto.id}" min="1" max="${concierto.disponibilidad}" value="1">
+                        <button class="btn-comprar" data-id="${concierto.id}">Agregar</button>
+                    </div>
+                </div>
+            </div>
         `;
-        carritoContainer.appendChild(item);
-      });
-    }
-    
-    totalElemento.textContent = '$' + total.toFixed(2);
-    
-    document.querySelectorAll('.btn-eliminar').forEach(function(boton) {
-      boton.addEventListener('click', function(e) {
-        const id = e.target.getAttribute('data-id');
-        eliminarDelCarrito(id);
-      });
+        listaConciertosContainer.appendChild(item);
     });
-  }
-  
-  // Funcion para eliminar una entrada de un concierto del carrito
-  function eliminarDelCarrito(id) {
-    const entrada = carrito.find(function(item) { return item.id === id; });
-    if (entrada) {
-      // Encontrar el concierto y devolver las entradas
-      const concierto = listaActual.find(function(c) { return c.id === entrada.conciertoId; });
-      if (concierto) {
-        concierto.disponibilidad += entrada.cantidad;
-      }
-      
-      carrito = carrito.filter(function(item) { return item.id !== id; });
-      mostrarMensaje(entrada.cantidad + ' entrada(s) ' + entrada.tipo + ' para ' + entrada.artista + ' eliminada(s)');
-      guardarCarrito();
-      actualizarCarrito();
-      mostrarConciertos(listaActual);
+}
+
+function configurarEventosIniciales() {
+    const formPagar = document.getElementById('form-pagar');
+    if (formPagar) {
+        formPagar.addEventListener('submit', function(e) {
+            if (getCarrito().length === 0) {
+                e.preventDefault();
+                mostrarFeedback('El carrito esta vacio');
+            }
+        });
     }
-  }
-  
-  // Mostrar mensajes de interaccion con el usuario
-  function mostrarMensaje(texto) {
-    const mensajeElement = document.getElementById("mensaje");
-    mensajeElement.textContent = texto;
-    mensajeElement.style.display = "block";
-  }
-  
-  function guardarCarrito() {
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-  }
-  
-  function cargarCarrito() {
-    carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-  }
-  
-  
-  // Funcion que sirve para mostrar las entradas que se compran
-  function mostrarEntradasCompradas() {
-    const entradasGuardadas = JSON.parse(localStorage.getItem('entradasCompradas')) || [];
-    entradasCompradasContainer.innerHTML = '';
-    
-    if (entradasGuardadas.length === 0) {
-      entradasCompradasContainer.innerHTML = '<li class="sin-entradas">No has comprado entradas aún</li>';
-      return;
+}
+
+function configurarEventosConciertos() {
+    const inputBusqueda = document.getElementById('input-busqueda');
+    if (inputBusqueda) {
+        inputBusqueda.addEventListener('input', function(e) {
+            const termino = e.target.value.toLowerCase();
+            let resultados;
+            
+            if (termino === '') {
+                resultados = conciertosData;
+            } else {
+                resultados = conciertosData.filter(concierto => 
+                    concierto.artista.toLowerCase().includes(termino) || 
+                    concierto.tour.toLowerCase().includes(termino)
+                );
+            }
+            
+            mostrarListaConciertos(resultados);
+        });
     }
-    
-    entradasGuardadas.forEach(function(entrada) {
-      const item = document.createElement('li');
-      item.className = 'entrada-comprada';
-      item.innerHTML = `
-        <img src="${entrada.imagen}" alt="Entrada ${entrada.artista}" onerror="this.src='img/default.jpg'">
-        <div class="info-entrada">
-          <h3>${entrada.artista} - ${entrada.tour}</h3>
-          <h4>${entrada.tipo} (${entrada.cantidad} entradas)</h4>
-          <p><strong>Total:</strong> $${entrada.precioTotal.toFixed(2)}</p>
-        </div>
-      `;
-      entradasCompradasContainer.appendChild(item);
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-comprar')) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const selectTipo = document.querySelector(`.select-tipo[data-id="${id}"]`);
+            const inputCantidad = document.querySelector(`.input-cantidad[data-id="${id}"]`);
+            
+            if (!selectTipo || !inputCantidad) return;
+            
+            const tipoEntrada = parseInt(selectTipo.value);
+            const cantidad = parseInt(inputCantidad.value);
+            
+            if (isNaN(cantidad) || cantidad < 1) {
+                mostrarFeedback('Cantidad no valida');
+                inputCantidad.value = 1;
+                return;
+            }
+
+            const concierto = conciertosData.find(c => c.id === id);
+            if (!concierto) {
+                mostrarFeedback('Concierto no encontrado');
+                return;
+            }
+
+            if (cantidad > concierto.disponibilidad) {
+                mostrarFeedback(`Solo quedan ${concierto.disponibilidad} entradas disponibles`);
+                inputCantidad.value = Math.min(cantidad, concierto.disponibilidad);
+                return;
+            }
+
+            const entrada = agregarAlCarrito(concierto, tipoEntrada, cantidad);
+            if (entrada) {
+                mostrarFeedback(`✔️ ${cantidad} entrada(s) ${entrada.tipo} para ${concierto.artista} agregada(s) al carrito`);
+
+                const disponibilidadElement = document.querySelector(`.disponibilidad[data-id="${id}"]`);
+                if (disponibilidadElement) {
+                    disponibilidadElement.textContent = `🎟️ Entradas disponibles: ${concierto.disponibilidad}`;
+                    inputCantidad.max = concierto.disponibilidad;
+                }
+                
+                if (concierto.disponibilidad === 0) {
+                    inputCantidad.disabled = true;
+                    e.target.disabled = true;
+                    e.target.textContent = 'AGOTADO';
+                }
+            }
+        }
+
+        if (e.target.classList.contains('btn-eliminar')) {
+            const id = e.target.getAttribute('data-id');
+            const entradaEliminada = eliminarDelCarrito(id);
+            
+            if (entradaEliminada) {
+                mostrarFeedback(`${entradaEliminada.cantidad} entrada(s) ${entradaEliminada.tipo} para ${entradaEliminada.artista} eliminada(s)`);
+                
+                const concierto = conciertosData.find(c => c.id === entradaEliminada.conciertoId);
+                if (concierto) {
+                    concierto.disponibilidad += entradaEliminada.cantidad;
+                    const disponibilidadElement = document.querySelector(`.disponibilidad[data-id="${concierto.id}"]`);
+                    if (disponibilidadElement) {
+                        disponibilidadElement.textContent = `🎟️ Entradas disponibles: ${concierto.disponibilidad}`;
+                    }
+                }
+
+            }
+        }
     });
-  }
-  
-  btnPagar.addEventListener('click', function() {
-    if (carrito.length > 0) {
-      let entradasActuales = [];
-      const entradasGuardadas = localStorage.getItem('entradasCompradas');
-      if (entradasGuardadas) {
-        entradasActuales = JSON.parse(entradasGuardadas);
-      }
-      
-      for (let i = 0; i < carrito.length; i++) {
-        entradasActuales.push(carrito[i]);
-      }
-      
-      localStorage.setItem('entradasCompradas', JSON.stringify(entradasActuales));
-      
-      mostrarMensaje('Compra realizada con éxito. ¡Disfruta del concierto!');
-      carrito = [];
-      guardarCarrito();
-      actualizarCarrito();
-      mostrarEntradasCompradas();
-    } else {
-      mostrarMensaje('El carrito está vacío');
-    }
-  });
-  
-  inputBusqueda.addEventListener('input', function(e) {
-    const termino = e.target.value.toLowerCase();
+}
+
+function mostrarOrdenesCompradas() {
+    const contenedorOrdenes = document.getElementById('ordenes-container');
+    const ordenesGuardadas = localStorage.getItem('entradasCompradas');
     
-    if (termino === '') {
-      listaActual = [];
-      for (let i = 0; i < conciertos.length; i++) {
-        listaActual.push(conciertos[i]);
-      }
-      mostrarConciertos(listaActual);
-      return;
+    contenedorOrdenes.innerHTML = '';
+    
+    if (!ordenesGuardadas || ordenesGuardadas === '') {
+        contenedorOrdenes.innerHTML = '<li class="sin-ordenes">No hay ordenes registradas</li>';
+        return;
     }
     
-    listaActual = [];
-    for (let i = 0; i < conciertos.length; i++) {
-      if (conciertos[i].artista.toLowerCase().includes(termino) || 
-          conciertos[i].tour.toLowerCase().includes(termino)) {
-        listaActual.push(conciertos[i]);
-      }
-    }
+    const ordenes = ordenesGuardadas.split('|');
+    const ordenesAgrupadas = {};
     
-    mostrarConciertos(listaActual);
-  });
+    ordenes.forEach((entradaStr, index) => {
+        const datos = entradaStr.split(',');
+        if (datos.length === 9) {
+            const ordenId = `ORD-${Math.floor(index / 3)}`;
+            
+            if (!ordenesAgrupadas[ordenId]) {
+                ordenesAgrupadas[ordenId] = {
+                    entradas: [],
+                    total: 0
+                };
+            }
+            
+            const entrada = {
+                id: datos[0],
+                artista: datos[2],
+                tour: datos[3],
+                tipo: datos[4],
+                cantidad: parseInt(datos[5]),
+                precioTotal: parseFloat(datos[7]),
+                imagen: datos[8]
+            };
+            
+            ordenesAgrupadas[ordenId].entradas.push(entrada);
+            ordenesAgrupadas[ordenId].total += entrada.precioTotal;
+        }
+    });
+    
+    Object.keys(ordenesAgrupadas).forEach(ordenId => {
+        const orden = ordenesAgrupadas[ordenId];
+        const ordenElement = document.createElement('li');
+        ordenElement.className = 'orden-item';
+        
+        const fechaCompra = new Date();
+        fechaCompra.setDate(fechaCompra.getDate() - Object.keys(ordenesAgrupadas).length + 
+                          parseInt(ordenId.split('-')[1]));
+        
+        ordenElement.innerHTML = `
+            <div class="orden-header">
+                <span class="orden-id">${ordenId}</span>
+                <span class="orden-fecha">${fechaCompra.toLocaleDateString()}</span>
+            </div>
+            <div class="orden-entradas">
+                ${orden.entradas.map(entrada => `
+                    <div class="entrada-item">
+                        <img src="${entrada.imagen}" alt="${entrada.artista}">
+                        <div class="entrada-info">
+                            <h4>${entrada.artista} - ${entrada.tour}</h4>
+                            <p>${entrada.cantidad} x ${entrada.tipo} - $${entrada.precioTotal.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="orden-total">
+                Total: <span>$${orden.total.toFixed(2)}</span>
+            </div>
+        `;
+        
+        contenedorOrdenes.appendChild(ordenElement);
+    });
+}
