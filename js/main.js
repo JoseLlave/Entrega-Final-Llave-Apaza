@@ -1,3 +1,4 @@
+// cuando se carga la pagina se ejecutan funciones para cargar conciertos y configurar eventos
 document.addEventListener('DOMContentLoaded', function() {
     cargarDatosConciertos();
     configurarEventosIniciales();
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 let conciertosData = [];
 
+// esta funcion trae los datos de los conciertos desde el archivo data.json
 function cargarDatosConciertos() {
     try {
         fetch('db/data.json')
@@ -13,7 +15,7 @@ function cargarDatosConciertos() {
                 if (!response.ok) {
                     mostrarFeedback('No se pudieron cargar los conciertos');
                     document.getElementById('lista-conciertos-container').innerHTML = 
-                        '<li class="sin-resultados">Error al cargar los conciertos. Por favor intenta más tarde.</li>';
+                        '<li class="sin-resultados">Error al cargar los conciertos. Por favor intenta mas tarde.</li>';
                     return;
                 }
                 return response.json();
@@ -28,15 +30,16 @@ function cargarDatosConciertos() {
             .catch(() => {
                 mostrarFeedback('No se pudieron cargar los conciertos');
                 document.getElementById('lista-conciertos-container').innerHTML = 
-                    '<li class="sin-resultados">Error al cargar los conciertos. Por favor intenta más tarde.</li>';
+                    '<li class="sin-resultados">Error al cargar los conciertos. Por favor intenta mas tarde.</li>';
             });
     } catch {
         mostrarFeedback('Ocurrio un problema inesperado');
         document.getElementById('lista-conciertos-container').innerHTML = 
-            '<li class="sin-resultados">Error inesperado. Por favor recarga la página.</li>';
+            '<li class="sin-resultados">Error inesperado. Por favor recarga la pagina.</li>';
     }
 }
 
+// esta funcion muestra en la pagina la lista de conciertos disponibles
 function mostrarListaConciertos(conciertos) {
     const listaConciertosContainer = document.getElementById('lista-conciertos-container');
     if (!listaConciertosContainer) return;
@@ -79,6 +82,7 @@ function mostrarListaConciertos(conciertos) {
     });
 }
 
+// esta funcion agrega la validacion para que no se pueda pagar si el carrito esta vacio
 function configurarEventosIniciales() {
     const formPagar = document.getElementById('form-pagar');
     if (formPagar) {
@@ -91,6 +95,7 @@ function configurarEventosIniciales() {
     }
 }
 
+// esta funcion se encarga de manejar eventos como buscar y agregar entradas
 function configurarEventosConciertos() {
     const inputBusqueda = document.getElementById('input-busqueda');
     if (inputBusqueda) {
@@ -173,12 +178,12 @@ function configurarEventosConciertos() {
                         disponibilidadElement.textContent = `🎟️ Entradas disponibles: ${concierto.disponibilidad}`;
                     }
                 }
-
             }
         }
     });
 }
 
+// esta funcion muestra las ordenes de entradas que fueron compradas antes
 function mostrarOrdenesCompradas() {
     const contenedorOrdenes = document.getElementById('ordenes-container');
     const ordenesGuardadas = localStorage.getItem('entradasCompradas');

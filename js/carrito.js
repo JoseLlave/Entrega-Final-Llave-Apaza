@@ -2,11 +2,13 @@ const impuesto = 0.1;
 let carrito = [];
 let total = 0;
 
+// cuando carga la pagina se carga el carrito si hay algo guardado
 document.addEventListener('DOMContentLoaded', () => {
     cargarCarrito();
     actualizarCarritoUI();
 });
 
+// esta funcion agrega una entrada al carrito si hay disponibilidad
 const agregarAlCarrito = (concierto, tipo, cantidad) => {
     if (cantidad > concierto.disponibilidad) {
         mostrarFeedback(`Solo quedan ${concierto.disponibilidad} entradas disponibles`);
@@ -56,6 +58,7 @@ const agregarAlCarrito = (concierto, tipo, cantidad) => {
     }
 };
 
+// esta funcion elimina una entrada del carrito usando su id
 const eliminarDelCarrito = (id) => {
     try {
         const entradaIndex = carrito.findIndex(item => item.id === id);
@@ -71,19 +74,23 @@ const eliminarDelCarrito = (id) => {
     }
 };
 
+// esta funcion suma el total del carrito
 const calcularTotal = () => {
     total = parseFloat(carrito.reduce((sum, item) => sum + parseFloat(item.precioTotal), 0).toFixed(2));
     return total;
 };
 
+// esta funcion retorna el carrito actual
 const getCarrito = () => carrito;
 
+// esta funcion vacia el carrito y reinicia el total
 const vaciarCarrito = () => {
     carrito = [];
     total = 0;
     guardarCarrito();
 };
 
+// esta funcion guarda el carrito en el localStorage del navegador
 const guardarCarrito = () => {
     const datosCarrito = carrito.map(item => 
         `${item.id},${item.conciertoId},${item.artista},${item.tour},` +
@@ -95,6 +102,7 @@ const guardarCarrito = () => {
     actualizarCarritoUI();
 };
 
+// esta funcion carga los datos guardados del carrito si existen
 const cargarCarrito = () => {
     const datosGuardados = localStorage.getItem('carrito');
     if (datosGuardados) {
@@ -117,6 +125,7 @@ const cargarCarrito = () => {
     }
 };
 
+// esta funcion revisa si el carrito tiene entradas para procesar el pago
 const procesarPago = () => {
     if (carrito.length === 0) {
         mostrarFeedback('El carrito está vacío');
@@ -125,6 +134,7 @@ const procesarPago = () => {
     return true;
 };
 
+// esta funcion actualiza la interfaz del carrito con las entradas y el total
 const actualizarCarritoUI = () => {
     const carritoContainer = document.getElementById('carrito-container');
     const totalElemento = document.getElementById('total-carrito');
@@ -154,6 +164,7 @@ const actualizarCarritoUI = () => {
     totalElemento.textContent = `$${calcularTotal()}`;
 };
 
+// esta funcion es para los mensajes tipo alerta usando la libreria externa de js sweetalert2
 function mostrarFeedback(mensaje) {
     let icono = 'info';
     

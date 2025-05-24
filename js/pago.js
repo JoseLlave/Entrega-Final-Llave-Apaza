@@ -1,3 +1,4 @@
+// cuando se carga la pagina se muestra el resumen de entradas y se configuran validaciones
 document.addEventListener('DOMContentLoaded', function() {
     mostrarResumenEntradas();
     configurarValidaciones();
@@ -8,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// esta funcion se encarga de validar los campos del formulario mientras se escriben
 function configurarValidaciones() {
     const campoNombre = document.getElementById('nombre-completo');
     const campoCorreo = document.getElementById('correo-electronico');
@@ -15,7 +17,8 @@ function configurarValidaciones() {
     const campoTarjeta = document.getElementById('numero-tarjeta');
     const campoFecha = document.getElementById('fecha-expiracion');
     const campoCVV = document.getElementById('codigo-seguridad');
-    
+
+    // valida que el nombre no tenga numeros
     campoNombre.addEventListener('input', function() {
         const valor = this.value;
         let tieneNumeros = false;
@@ -38,6 +41,7 @@ function configurarValidaciones() {
         }
     });
     
+    // valida el correo cuando se sale del input
     campoCorreo.addEventListener('blur', function() {
         const valor = this.value;
         if (valor && (valor.indexOf('@') === -1 || valor.indexOf('.') === -1)) {
@@ -47,6 +51,7 @@ function configurarValidaciones() {
         }
     });
     
+    // solo permite numeros y limita el telefono a 9 digitos
     campoTelefono.addEventListener('input', function() {
         let nuevoValor = '';
         const valor = this.value;
@@ -61,6 +66,7 @@ function configurarValidaciones() {
         this.value = nuevoValor.slice(0, 9);
     });
     
+    // solo numeros y maximo 16 digitos para tarjeta
     campoTarjeta.addEventListener('input', function() {
         let nuevoValor = '';
         const valor = this.value;
@@ -75,6 +81,7 @@ function configurarValidaciones() {
         this.value = nuevoValor.slice(0, 16);
     });
     
+    // da formato MM/AA a la fecha de expiracion mientras se escribe
     campoFecha.addEventListener('input', function() {
         let nuevoValor = '';
         const valor = this.value;
@@ -93,6 +100,7 @@ function configurarValidaciones() {
         }
     });
     
+    // solo acepta numeros y limita a 4 digitos maximo
     campoCVV.addEventListener('input', function() {
         let nuevoValor = '';
         const valor = this.value;
@@ -108,6 +116,7 @@ function configurarValidaciones() {
     });
 }
 
+// esta funcion muestra el error debajo del input con un mensaje
 function mostrarError(campo, mensaje) {
     limpiarError(campo);
     const errorDiv = document.createElement('div');
@@ -117,6 +126,7 @@ function mostrarError(campo, mensaje) {
     campo.classList.add('error');
 }
 
+// esta funcion borra el error si ya se corrigio el campo
 function limpiarError(campo) {
     const errorDiv = campo.parentNode.querySelector('.error-validacion');
     if (errorDiv) {
@@ -125,6 +135,7 @@ function limpiarError(campo) {
     campo.classList.remove('error');
 }
 
+// esta funcion agarra las entradas del carrito y las muestra en un resumen antes del pago
 function mostrarResumenEntradas() {
     const resumenContainer = document.getElementById('resumen-entradas-container');
     const totalPagarElement = document.getElementById('total-pagar');
@@ -180,6 +191,7 @@ function mostrarResumenEntradas() {
     totalPagarElement.textContent = `$${total.toFixed(2)}`;
 }
 
+// esta funcion se activa al enviar el formulario y valida todo antes de confirmar el pago
 function confirmarPago() {
     const nombre = document.getElementById('nombre-completo').value.trim();
     const correo = document.getElementById('correo-electronico').value.trim();
@@ -193,6 +205,7 @@ function confirmarPago() {
         return;
     }
     
+    // confirmacion con sweetalert antes de procesar
     Swal.fire({
         title: '¿Confirmar pago?',
         html: `Verifique que los siguientes datos son correctos:<br><br>
@@ -213,6 +226,7 @@ function confirmarPago() {
     });
 }
 
+// esta funcion valida todos los campos del formulario uno por uno
 function validarDatosPago(nombre, correo, telefono, tarjeta, fecha, cvv, metodo) {
     // Validar nombre
     if (!nombre) {
@@ -284,6 +298,7 @@ function validarDatosPago(nombre, correo, telefono, tarjeta, fecha, cvv, metodo)
     return true;
 }
 
+// esta funcion guarda la compra en localStorage, actualiza stock y redirige a inicio
 function procesarPagoReal(nombre, correo, telefono) {
     try {
         const carritoGuardado = localStorage.getItem('carrito');
